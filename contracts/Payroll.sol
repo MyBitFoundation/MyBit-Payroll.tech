@@ -32,10 +32,10 @@ contract Payroll {
   function addOrganization(string _organizationName, address[] _employees, uint[] _salaries)
   external {
     require(!expired);
-    require(mybBurner.burn(msg.sender, mybFee));
     require(_employees.length < uint8(100));    // uint8 overflows at 256. Dont loop through more than
     require(_employees.length == _salaries.length);
     require( !database.boolStorage(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName))) );   // Impossible for owner to be set true without organization being registered
+    require(mybBurner.burn(msg.sender, mybFee));
 
     database.setBool(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName)), true);
     database.setBool(keccak256(abi.encodePacked("payrollIsOwner", _organizationName, msg.sender)), true);
