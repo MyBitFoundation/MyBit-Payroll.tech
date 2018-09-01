@@ -172,7 +172,7 @@ contract Payroll {
     }
   }
 
-  // @notice If called by owner, this function prevents more Trust contracts from being made once
+  // @notice If called by owner, this function prevents more organizations from being created
   // @notice Old contracts will continue to function
   function closeContract()
   external {

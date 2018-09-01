@@ -94,6 +94,7 @@ contract('Payroll', async (accounts) => {
 
   it('Add Organization - Employee Fail', async() => {
     try{
+      await token.approve(burnerAddress, burnFee);
       await payroll.addOrganization(organization, employeesFail, salaries);
     } catch(e){
       console.log('Incorrect employee addresses');
@@ -101,6 +102,7 @@ contract('Payroll', async (accounts) => {
   });
 
   it('Add Organization', async() => {
+    await token.approve(burnerAddress, burnFee);
     await payroll.addOrganization(organization, employees, salaries);
   });
 
@@ -361,7 +363,7 @@ contract('Payroll', async (accounts) => {
     await payroll.closeContract();
   });
 
-  it('Fail to close factory', async() => {
+  it('Fail to close contract', async() => {
     try {
       await payroll.closeContract();
     }catch(e) {
