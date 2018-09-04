@@ -94,6 +94,7 @@ contract('Payroll', async (accounts) => {
 
   it('Add Organization - Employee Fail', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization(organization, employeesFail, salaries);
     } catch(e){
       console.log('Incorrect employee addresses');
@@ -101,6 +102,7 @@ contract('Payroll', async (accounts) => {
   });
 
   it('Add Organization', async() => {
+    await token.approve(burner.address, burnFee);
     await payroll.addOrganization(organization, employees, salaries);
   });
 
@@ -319,6 +321,7 @@ contract('Payroll', async (accounts) => {
 
   it('Create organization, too many employees', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization('FailCorp', tooManyAddresses, [10,10,10], {from: employer2});
     } catch(e){
       console.log('Create failed');
@@ -327,6 +330,7 @@ contract('Payroll', async (accounts) => {
 
   it('Create organization, name taken', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization(organization, [employee, employee2], [10,10], {from: employer2});
     } catch(e){
       console.log('Create failed');
@@ -335,6 +339,7 @@ contract('Payroll', async (accounts) => {
 
   it('Create organization, salary is 0', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization('FailCorp', [employee, employee2], [10,0], {from: employer2});
     } catch(e){
       console.log('Create failed');
@@ -343,6 +348,7 @@ contract('Payroll', async (accounts) => {
 
   it('Create organization, salary address mismatch', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization('FailCorp', [employee, employee2], [10,10,10], {from: employer2});
     } catch(e){
       console.log('Create failed');
@@ -361,7 +367,7 @@ contract('Payroll', async (accounts) => {
     await payroll.closeContract();
   });
 
-  it('Fail to close factory', async() => {
+  it('Fail to close contract', async() => {
     try {
       await payroll.closeContract();
     }catch(e) {
@@ -371,6 +377,7 @@ contract('Payroll', async (accounts) => {
 
   it('Fail to create organization', async() => {
     try{
+      await token.approve(burner.address, burnFee);
       await payroll.addOrganization('NewOrg', employees, salaries);
     }catch(e){
       console.log('Contract is closed');
