@@ -22,12 +22,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>60/60</span>
+        <span class='fraction'>61/61</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">98% </span>
+        <span class="strong">90.38% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>49/50</span>
+        <span class='fraction'>47/52</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>86/86</span>
+        <span class='fraction'>87/87</span>
       </div>
     </div>
   </div>
@@ -251,7 +251,8 @@
 206
 207
 208
-209</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+209
+210</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -285,22 +286,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">6×</span>
 <span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">8×</span>
-<span class="cline-any cline-yes">7×</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">5×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -493,9 +495,10 @@ contract Payroll {
   function addOrganization(string _organizationName, address[] _employees, uint[] _salaries)
   external {
     require(!expired);
-    require(_employees.length &lt; uint8(100));    // uint8 overflows at 256. Dont loop through more than
-    require(_employees.length == _salaries.length);
-    require( !database.boolStorage(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName))) );   // Impossible for owner to be set true without organization being registered
+    require(mybBurner.burn(msg.sender, mybFee));
+    <span class="missing-if-branch" title="else path not taken" >E</span>require(_employees.length &lt; uint8(100));    // uint8 overflows at 256. Dont loop through more than
+    <span class="missing-if-branch" title="else path not taken" >E</span>require(_employees.length == _salaries.length);
+    <span class="missing-if-branch" title="else path not taken" >E</span>require( !database.boolStorage(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName))) );   // Impossible for owner to be set true without organization being registered
 &nbsp;
     database.setBool(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName)), true);
     database.setBool(keccak256(abi.encodePacked("payrollIsOwner", _organizationName, msg.sender)), true);
@@ -503,7 +506,7 @@ contract Payroll {
 &nbsp;
     for (uint i = 0; i &lt; _employees.length; i++) {
       assert(_employees[i] != address(0));
-      assert(_salaries[i] &gt; 0);
+      <span class="missing-if-branch" title="else path not taken" >E</span>assert(_salaries[i] &gt; 0);
       database.setAddress(keccak256(abi.encodePacked("payrollEmployeeAddresses", _organizationName, i)), _employees[i]);
       database.setUint(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, _employees[i])), _salaries[i]);
       database.setBool(keccak256(abi.encodePacked("payrollIsEmployee", _organizationName, _employees[i])), true);
@@ -632,7 +635,7 @@ contract Payroll {
     }
   }
 &nbsp;
-  // @notice If called by owner, this function prevents more Trust contracts from being made once
+  // @notice If called by owner, this function prevents more organizations from being created
   // @notice Old contracts will continue to function
   function closeContract()
   external {
@@ -673,7 +676,7 @@ contract Payroll {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Aug 28 2018 13:46:11 GMT-0700 (PDT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 31 2018 20:37:22 GMT-0700 (PDT)
 </div>
 </div>
 <script src="../prettify.js"></script>
