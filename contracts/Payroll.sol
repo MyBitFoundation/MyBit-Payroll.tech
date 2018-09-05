@@ -11,9 +11,9 @@ import './MyBitBurner.sol';
 contract Payroll {
   using SafeMath for uint;
 
-  Database public database;
-  MyBitBurner public mybBurner;
-  address public owner;
+  Database private database;
+  MyBitBurner private mybBurner;
+  address private owner;
 
   uint public mybFee = 250;
   bool public expired = false;
