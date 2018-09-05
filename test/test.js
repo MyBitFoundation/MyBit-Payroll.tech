@@ -29,6 +29,7 @@ contract('Payroll', async (accounts) => {
   let employees = [employee, employee2, employee3];
   let employeesFail = [employee, employee2, ''];
   let salaries = [100, 150, 200];
+  let salariesFail = [100, 150, 0];
 
   let database;
   let contractManager;
@@ -98,6 +99,15 @@ contract('Payroll', async (accounts) => {
       await payroll.addOrganization(organization, employeesFail, salaries);
     } catch(e){
       console.log('Incorrect employee addresses');
+    }
+  });
+
+  it('Add Organization - Salary Fail', async() => {
+    try{
+      await token.approve(burner.address, burnFee);
+      await payroll.addOrganization(organization, employees, salariesFail);
+    } catch(e){
+      console.log('Salaries cannot equal zero');
     }
   });
 

@@ -22,22 +22,22 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>61/61</span>
+        <span class='fraction'>58/58</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">90.38% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>47/52</span>
+        <span class='fraction'>50/50</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>11/11</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>87/87</span>
+        <span class='fraction'>83/83</span>
       </div>
     </div>
   </div>
@@ -285,24 +285,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8×</span>
 <span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">4×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2×</span>
-<span class="cline-any cline-yes">6×</span>
-<span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-yes">5×</span>
-<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">7×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -377,7 +377,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -450,10 +449,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">3×</span>
-<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -488,17 +488,17 @@ contract Payroll {
   }
 &nbsp;
   /// @dev counter to allow mutex lock with only one SSTORE operation
-  uint256 private guardCounter = 1;
+  //uint256 private guardCounter = 1;
 &nbsp;
   // @notice
   // @dev _totalSupply == total salaries of all employees (1 token == 1 LocalAreaUnit (CHF, USD, EUR..))
   function addOrganization(string _organizationName, address[] _employees, uint[] _salaries)
   external {
     require(!expired);
+    require(_employees.length &lt; uint8(100));    // uint8 overflows at 256. Dont loop through more than
+    require(_employees.length == _salaries.length);
+    require( !database.boolStorage(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName))) );   // Impossible for owner to be set true without organization being registered
     require(mybBurner.burn(msg.sender, mybFee));
-    <span class="missing-if-branch" title="else path not taken" >E</span>require(_employees.length &lt; uint8(100));    // uint8 overflows at 256. Dont loop through more than
-    <span class="missing-if-branch" title="else path not taken" >E</span>require(_employees.length == _salaries.length);
-    <span class="missing-if-branch" title="else path not taken" >E</span>require( !database.boolStorage(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName))) );   // Impossible for owner to be set true without organization being registered
 &nbsp;
     database.setBool(keccak256(abi.encodePacked("payrollIsOrganization", _organizationName)), true);
     database.setBool(keccak256(abi.encodePacked("payrollIsOwner", _organizationName, msg.sender)), true);
@@ -506,7 +506,7 @@ contract Payroll {
 &nbsp;
     for (uint i = 0; i &lt; _employees.length; i++) {
       assert(_employees[i] != address(0));
-      <span class="missing-if-branch" title="else path not taken" >E</span>assert(_salaries[i] &gt; 0);
+      assert(_salaries[i] &gt; 0);
       database.setAddress(keccak256(abi.encodePacked("payrollEmployeeAddresses", _organizationName, i)), _employees[i]);
       database.setUint(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, _employees[i])), _salaries[i]);
       database.setBool(keccak256(abi.encodePacked("payrollIsEmployee", _organizationName, _employees[i])), true);
@@ -585,7 +585,6 @@ contract Payroll {
   // @param (string) _organizationName = The name of the organization
   function payEmployees(string _organizationName)
   external
-  nonReentrant
   payable {
     require(getTotalPayroll(_organizationName) == msg.value);
     require( database.boolStorage(keccak256(abi.encodePacked("payrollIsOwner", _organizationName, msg.sender))) );
@@ -657,13 +656,14 @@ contract Payroll {
    * another is not supported. Instead, you can implement a
    * `private` function doing the actual work, and an `external`
    * wrapper marked as `nonReentrant`.
-   */
+&nbsp;
   modifier nonReentrant() {
     guardCounter += 1;
     uint256 localCounter = guardCounter;
     _;
-    <span class="missing-if-branch" title="else path not taken" >E</span>require(localCounter == guardCounter);
+    require(localCounter == guardCounter);
   }
+  */
 &nbsp;
 &nbsp;
   event LogNewEmployee(address indexed _employee, uint _salary, uint _index);
@@ -676,7 +676,7 @@ contract Payroll {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Aug 31 2018 20:37:22 GMT-0700 (PDT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Tue Sep 04 2018 09:05:10 GMT-0700 (PDT)
 </div>
 </div>
 <script src="../prettify.js"></script>
