@@ -11,9 +11,9 @@ import './MyBitBurner.sol';
 contract Payroll {
   using SafeMath for uint;
 
-  Database public database;
-  MyBitBurner public mybBurner;
-  address public owner;
+  Database private database;
+  MyBitBurner private mybBurner;
+  address private owner;
 
   uint public mybFee = 250;
   bool public expired = false;
@@ -25,7 +25,7 @@ contract Payroll {
   }
 
   /// @dev counter to allow mutex lock with only one SSTORE operation
-  uint256 private guardCounter = 1;
+  //uint256 private guardCounter = 1;
 
   // @notice
   // @dev _totalSupply == total salaries of all employees (1 token == 1 LocalAreaUnit (CHF, USD, EUR..))
@@ -122,7 +122,6 @@ contract Payroll {
   // @param (string) _organizationName = The name of the organization
   function payEmployees(string _organizationName)
   external
-  nonReentrant
   payable {
     require(getTotalPayroll(_organizationName) == msg.value);
     require( database.boolStorage(keccak256(abi.encodePacked("payrollIsOwner", _organizationName, msg.sender))) );
@@ -194,13 +193,14 @@ contract Payroll {
    * another is not supported. Instead, you can implement a
    * `private` function doing the actual work, and an `external`
    * wrapper marked as `nonReentrant`.
-   */
+
   modifier nonReentrant() {
     guardCounter += 1;
     uint256 localCounter = guardCounter;
     _;
     require(localCounter == guardCounter);
   }
+  */
 
 
   event LogNewEmployee(address indexed _employee, uint _salary, uint _index);
