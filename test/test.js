@@ -1,4 +1,4 @@
-var BigNumber = require('bignumber.js');
+var bn = require('bignumber.js');
 
 const Payroll = artifacts.require('./Payroll.sol');
 const Token = artifacts.require('./ERC20.sol');
@@ -8,10 +8,10 @@ const ContractManager = artifacts.require('./ContractManager.sol');
 
 const WEI = 1000000000000000000;
 
-const tokenSupply = 100000;
-const tokenPerAccount = 1000;
+const tokenSupply = 100000*WEI;
+const tokenPerAccount = 1000*WEI;
 
-let burnFee = 250;
+let burnFee = 250*WEI;
 
 contract('Payroll', async (accounts) => {
   const employer = web3.eth.accounts[0];
@@ -57,9 +57,9 @@ contract('Payroll', async (accounts) => {
       assert.equal(userBalance, tokenPerAccount);
     }
     // Check token ledger is correct
-    const totalTokensCirculating = (web3.eth.accounts.length - 1) * (tokenPerAccount);
-    const remainingTokens = tokenSupply - totalTokensCirculating;
-    assert.equal(await token.balanceOf(employer), remainingTokens);
+    const totalTokensCirculating = bn(web3.eth.accounts.length - 1).times(tokenPerAccount);
+    const remainingTokens = bn(tokenSupply).minus(totalTokensCirculating);
+    assert.equal(bn(await token.balanceOf(employer)).eq(remainingTokens), true);
   });
 
   it('Deploy Database', async() => {
@@ -230,10 +230,10 @@ contract('Payroll', async (accounts) => {
   });
 
   it('Do payroll', async() => {
-    let employee1Before = new BigNumber(await web3.eth.getBalance(employee));
-    //let employee2Before = new BigNumber(await web3.eth.getBalance(employee2));
-    let employee3Before = new BigNumber(await web3.eth.getBalance(employee3));
-    let employee4Before = new BigNumber(await web3.eth.getBalance(employee4));
+    let employee1Before = new bn(await web3.eth.getBalance(employee));
+    //let employee2Before = new bn(await web3.eth.getBalance(employee2));
+    let employee3Before = new bn(await web3.eth.getBalance(employee3));
+    let employee4Before = new bn(await web3.eth.getBalance(employee4));
     console.log('Employee 1 Before: ' + employee1Before);
     //console.log('Employee 2 Before: ' + employee2Before);
     console.log('Employee 3 Before: ' + employee3Before);
@@ -245,10 +245,10 @@ contract('Payroll', async (accounts) => {
 
     await payroll.payEmployees(organization, {value: total});
 
-    let employee1After = new BigNumber(await web3.eth.getBalance(employee));
-    //let employee2After = new BigNumber(await web3.eth.getBalance(employee2));
-    let employee3After = new BigNumber(await web3.eth.getBalance(employee3));
-    let employee4After = new BigNumber(await web3.eth.getBalance(employee4));
+    let employee1After = new bn(await web3.eth.getBalance(employee));
+    //let employee2After = new bn(await web3.eth.getBalance(employee2));
+    let employee3After = new bn(await web3.eth.getBalance(employee3));
+    let employee4After = new bn(await web3.eth.getBalance(employee4));
     console.log('Employee 1 After: ' + employee1After);
     //console.log('Employee 2 After: ' + employee2After);
     console.log('Employee 3 After: ' + employee3After);

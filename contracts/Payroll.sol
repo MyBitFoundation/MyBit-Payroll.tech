@@ -15,7 +15,7 @@ contract Payroll {
   MyBitBurner private mybBurner;
   address private owner;
 
-  uint public mybFee = 250;
+  uint public mybFee = 250000000000000000000;
   bool public expired = false;
 
   constructor(address _database, address _mybTokenBurner) public{

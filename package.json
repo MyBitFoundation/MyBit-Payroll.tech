@@ -4,7 +4,7 @@
   "description": "Dapp for employee payroll",
   "main": "truffle.js",
   "directories": {
-    "doc": "docs",
+    "doc": "docgen/docs",
     "test": "test"
   },
   "scripts": {
@@ -18,10 +18,10 @@
   "dependencies": {
     "bignumber.js": "^7.2.1",
     "coveralls": "^3.0.2",
-    "ganache-cli": "^6.1.0",
+    "ganache-cli": "^6.2.1",
     "request": "^2.87.0",
-    "solc": "^0.4.24",
-    "truffle": "^4.1.14"
+    "solc": "0.4.24",
+    "truffle": "4.1.14"
   },
   "devDependencies": {
     "solidity-coverage": "^0.5.11"
