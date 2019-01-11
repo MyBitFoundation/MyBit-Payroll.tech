@@ -48,8 +48,9 @@ contract Payroll {
       database.setUint(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, _employees[i])), _salaries[i]);
       database.setBool(keccak256(abi.encodePacked("payrollIsEmployee", _organizationName, _employees[i])), true);
 
-      emit LogNewEmployee(_employees[i], _salaries[i], i);
+      emit LogNewEmployee(_organizationName, _employees[i], _salaries[i], i);
     }
+      emit LogNewOrganization(_organizationName, msg.sender);
   }
 
   function addEmployee(string _organizationName, address _newEmployee, uint _salary)
@@ -64,7 +65,7 @@ contract Payroll {
     database.setUint(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, _newEmployee)), _salary); //Add employee salary
     database.setBool(keccak256(abi.encodePacked("payrollIsEmployee", _organizationName, _newEmployee)), true); //Set employee status to true
 
-    emit LogNewEmployee(_newEmployee, _salary, totalEmployees+1);
+    emit LogNewEmployee(_organizationName, _newEmployee, _salary, totalEmployees+1);
   }
 
   function listEmployees(string _organizationName)
@@ -94,6 +95,7 @@ contract Payroll {
         return;
       }
     }
+    emit LogRemoveEmployee(_organizationName, _employee);
   }
 
   function removeEmployeeKeepOrder(string _organizationName, address _employee)
@@ -115,6 +117,7 @@ contract Payroll {
     }
     assert(found);
     database.setUint(keccak256(abi.encodePacked("payrollTotalEmployees", _organizationName)), totalEmployees-1);
+    emit LogRemoveEmployee(_organizationName, _employee);
   }
 
   // @notice employer can send funds here to be distributed to all his employees
@@ -131,6 +134,20 @@ contract Payroll {
       address thisEmployee = database.addressStorage(keccak256(abi.encodePacked("payrollEmployeeAddresses", _organizationName, i)));
       thisEmployee.transfer( database.uintStorage(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, thisEmployee))) );
     }
+    emit LogPayEmployees(_organizationName);
+  }
+
+  function listSalaries(string _organizationName)
+  view
+  external
+  returns(uint[]) {
+    uint totalEmployees = database.uintStorage(keccak256(abi.encodePacked("payrollTotalEmployees", _organizationName))); //Get total employees
+    uint[] memory salaryList = new uint[](totalEmployees);
+    for(uint i=0; i<totalEmployees; i++){
+      address thisEmployee = database.addressStorage(keccak256(abi.encodePacked("payrollEmployeeAddresses", _organizationName, i)));
+      salaryList[i] = database.uintStorage(keccak256(abi.encodePacked("payrollEmployeeSalaries", _organizationName, thisEmployee)));
+    }
+    return salaryList;
   }
 
   // @dev Should this function be accessible to anyone but the organization owner?
@@ -166,6 +183,7 @@ contract Payroll {
           return;
         }
       }
+      emit LogUpdateAddress(_organizationName, _oldAddress, _newAddress);
     } else {
       revert();
     }
@@ -203,7 +221,9 @@ contract Payroll {
   */
 
 
-  event LogNewEmployee(address indexed _employee, uint _salary, uint _index);
-  event LogNewOrganization(bytes32 indexed _id, address indexed _creator);
-
+  event LogNewEmployee(string _organizationName, address indexed _employee, uint _salary, uint _index);
+  event LogNewOrganization(string _organizationName, address indexed _creator);
+  event LogPayEmployees(string _organizationName);
+  event LogRemoveEmployee(string _organizationName, address indexed _employee);
+  event LogUpdateAddress(string _organizationName, address indexed _oldAddress, address indexed _newAddress);
 }
