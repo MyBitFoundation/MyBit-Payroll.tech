@@ -7,6 +7,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components/macro';
+import HomePageDisclaimer from '@bit/mybit.ui.home-page-disclaimer';
 
 import H1 from 'components/H1';
 import P from 'components/P';
@@ -116,6 +117,7 @@ export class HomePage extends React.PureComponent {
             Contribute
           </Button>
         </StyledCenterButton>
+        <HomePageDisclaimer />
       </StyledPage>
     );
   }

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "7.1.0",
+    "@bit/mybit.ui.home-page-disclaimer": "^0.0.1",
     "@bit/mybit.ui.showcase.address": "0.0.1",
     "@bit/mybit.ui.showcase.button": "0.0.3",
     "@svgr/webpack": "2.4.1",
